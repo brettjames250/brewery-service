@@ -1,7 +1,9 @@
-package com.springmicroservices.breweryservice.web.controller;
+package com.springmicroservices.breweryservice.web.controller.v2;
 
 import com.springmicroservices.breweryservice.services.BeerService;
+import com.springmicroservices.breweryservice.services.v2.BeerServiceV2;
 import com.springmicroservices.breweryservice.web.model.BeerDto;
+import com.springmicroservices.breweryservice.web.model.v2.BeerDtoV2;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +26,23 @@ URLs tend to only referene MAJOR versions e.g v1
  */
 
 @RestController
-@RequestMapping("/api/v1/beer")
-public class BeerController {
+@RequestMapping("/api/v2/beer")
+public class BeerControllerV2 {
 
-    private final BeerService beerService;
+    private final BeerServiceV2 beerService;
 
-    public BeerController(BeerService beerService) {
+    public BeerControllerV2(BeerServiceV2 beerService) {
         this.beerService = beerService;
     }
 
     @GetMapping("/{beerId}") // GET - beer by id
-    public ResponseEntity<BeerDto> getBeer(@PathVariable("beerId") UUID beerId){
+    public ResponseEntity<BeerDtoV2> getBeer(@PathVariable("beerId") UUID beerId){
         return new ResponseEntity<>(beerService.getBeerById(beerId), HttpStatus.OK);
     }
 
     @PostMapping() // POST - create new beer
-    public ResponseEntity addBeer(@RequestBody BeerDto beer){
-        BeerDto newBeer = beerService.addNewBeer(beer);
+    public ResponseEntity addBeer(@RequestBody BeerDtoV2 beer){
+        BeerDtoV2 newBeer = beerService.addNewBeer(beer);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Location", "/api/v1/beer/" + newBeer.getId().toString());
         return new ResponseEntity(headers, HttpStatus.CREATED);
@@ -49,7 +51,7 @@ public class BeerController {
 
     @PutMapping("/{beerId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDto beer){
+    public void handleUpdate(@PathVariable("beerId") UUID beerId, @RequestBody BeerDtoV2 beer){
         beerService.updateBeer(beerId, beer);
     }
 
